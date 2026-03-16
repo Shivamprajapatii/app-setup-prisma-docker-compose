@@ -17,14 +17,12 @@
 ## Docer Installation Steps
 - Install Docker 
 - Install Postgres 
-    - docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecret postgres
+    - docker run -d --name postgres -p 5432:5432 --network my_custom_network -e POSTGRES_PASSWORD=mysecret -e POSTGRES_DB=userdb -v postgres_data:/var/lib/postgresql postgres 
 
 - Build the Image 
-    - docker build -t myapp
+    - docker build -t myapp .
 - Start the Image 
-    - docker run -d --name myapp  -p 3000:3000 myapp
-
-
+    - docker run -d --name mywebapp --network my_custom_network -p 3000:3000 fullstackapp
 
 ## Docker Compose Installation Steps
 
