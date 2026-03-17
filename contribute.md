@@ -24,6 +24,9 @@
 - Start the Image 
     - docker run -d --name mywebapp --network my_custom_network -p 3000:3000 fullstackapp
 
+### Note: If both Container is Connected with Same Network we does not need to expose port also 
+    - docker run -d --name postgres --network my_custom_network -e POSTGRES_PASSWORD=mysecret -e POSTGRES_DB=userdb -v postgres_data:/var/lib/postgresql postgres
+
 ## Docker Compose Installation Steps
 
 - Install Docker, Docker Compose 
