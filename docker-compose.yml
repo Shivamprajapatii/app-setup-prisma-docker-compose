@@ -1,17 +1,46 @@
-version: '3.8'
+version: '1.0'
 
 services:
   postgres:
-    image: postgres:16
-    container_name: postgres_container
+    image: postgres
+    container_name: postgres
+    restart : always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mysecret
-      POSTGRES_DB: userdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecret
+      - POSTGRES_DB=userdb
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - mynetwork
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  app:
+    build: .
+    container_name: myapp
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:mysecret@postgres:5432/userdb
+    ports:
+      - "3000:3000"
+    networks:
+      - mynetwork
 
 volumes:
   postgres_data:
+
+networks:
+  mynetwork:
+    external: true
+    name: my_custom_network
